@@ -2891,11 +2891,9 @@ static bool test_replay(struct torture_context *torture,
 		.length = 100,
 		.offset = 100,
 	};
-	lck = (struct smb2_lock) {
-		.in.locks = &el,
-		.in.lock_count	= 0x0001,
-		.in.file.handle	= h
-	};
+		lck.in.locks = &el;
+		lck.in.lock_count	= 0x0001;
+		lck.in.file.handle	= h;
 
 	torture_comment(torture, "Testing Lock (ignored) Replay detection:\n");
 	lck.in.lock_sequence = 0x010 + 0x1;
@@ -2914,15 +2912,15 @@ static bool test_replay(struct torture_context *torture,
 	torture_comment(torture, "Testing Set Resiliency:\n");
 	SIVAL(res_req, 0, 1000); /* timeout */
 	SIVAL(res_req, 4, 0);    /* reserved */
-	ioctl = (struct smb2_ioctl) {
-		.level = RAW_IOCTL_SMB2,
-		.in.file.handle = h,
-		.in.function = FSCTL_LMR_REQ_RESILIENCY,
-		.in.max_response_size = 0,
-		.in.flags = SMB2_IOCTL_FLAG_IS_FSCTL,
-		.in.out.data = res_req,
-		.in.out.length = sizeof(res_req)
-	};
+
+		ioctl.level = RAW_IOCTL_SMB2;
+		ioctl.in.file.handle = h;
+		ioctl.in.function = FSCTL_LMR_REQ_RESILIENCY;
+		ioctl.in.max_response_size = 0;
+		ioctl.in.flags = SMB2_IOCTL_FLAG_IS_FSCTL;
+		ioctl.in.out.data = res_req;
+		ioctl.in.out.length = sizeof(res_req);
+
 	status = smb2_ioctl(tree, torture, &ioctl);
 	CHECK_STATUS(status, NT_STATUS_OK);
 
