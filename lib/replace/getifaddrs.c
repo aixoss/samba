@@ -60,7 +60,7 @@ static struct sockaddr *sockaddr_dup(struct sockaddr *sa)
 {
 	struct sockaddr *ret;
 	socklen_t socklen;
-#ifdef HAVE_SOCKADDR_SA_LEN
+#if defined(HAVE_SOCKADDR_SA_LEN) && !defined(AIX)
 	socklen = sa->sa_len;
 #else
 	socklen = sizeof(struct sockaddr_storage);
