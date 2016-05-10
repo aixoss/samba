@@ -31,6 +31,10 @@
 
 #include <netapi.h>
 
+#ifdef _AIX
+#include "vasprintf.c"
+#endif
+
 #define MAX_CRED_LEN 256
 #define MAX_NETBIOS_NAME_LEN 15
 
@@ -1765,6 +1769,9 @@ static int initialize_join_state(struct join_state *state,
 	}
 
 	{
+#if defined(_AIX51) && !defined(_AIX52)
+#define HOST_NAME_MAX 256
+#endif
 		char my_hostname[HOST_NAME_MAX];
 		const char *p = NULL;
 		struct hostent *hp = NULL;
